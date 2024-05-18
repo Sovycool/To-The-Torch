@@ -66,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void StickOnGround()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, 0.51f) && rb.velocity.y < 0)
+        if (Physics.Raycast(transform.position, Vector3.down, 0.51f) && rb.velocity.y <= 0)
             rb.velocity = new Vector3(0f, 0f, 0f);
     }
 
