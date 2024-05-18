@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -50,11 +51,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void BounceOnWalls()
     {
-        if (Physics.Raycast(transform.position + new Vector3(0, 0.5f), Vector3.right, 0.51f) ||
-            Physics.Raycast(transform.position - new Vector3(0, 0.5f), Vector3.right, 0.51f) ||
-            Physics.Raycast(transform.position, Vector3.right, 0.51f) ||
-            Physics.Raycast(transform.position + new Vector3(0, 0.5f), Vector3.left, 0.51f) ||
-            Physics.Raycast(transform.position - new Vector3(0, 0.5f), Vector3.left, 0.51f) ||
+        if (Physics.Raycast(transform.position, Vector3.right, 0.51f) ||
             Physics.Raycast(transform.position, Vector3.left, 0.51f)) {
             rb.velocity = new Vector3(rb.velocity.x * -1, rb.velocity.y);
         }
@@ -62,22 +59,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void BounceOnCeiling()
     {
-        if ((Physics.Raycast(transform.position + new Vector3(0.5f, 0), Vector3.up, 0.51f) ||
-            Physics.Raycast(transform.position - new Vector3(0.5f, 0), Vector3.up, 0.51f) ||
-            Physics.Raycast(transform.position, Vector3.up, 0.51f)) && rb.velocity.y > 0) {
-            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * -1);
+        if (Physics.Raycast(transform.position, Vector3.up, 0.51f) && rb.velocity.y > 0) {
+            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * -0.9f);
         }
+    }
+
+    private void StickOnGround()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, 0.51f) && rb.velocity.y < 0)
+            rb.velocity = new Vector3(0f, 0f, 0f);
     }
 
     void FixedUpdate()
     {
         BounceOnWalls();
         BounceOnCeiling();
+        StickOnGround();
         IsGrounded();
         SetDir();
         if (Input.GetKey(KeyCode.Space) && grounded)
             jumpForce = Math.Min(jumpForce + (jumpStats.max / jumpStats.timeToMax), jumpStats.max);
-        else if (jumpForce > jumpStats.min) {
+        else if (jumpForce > jumpStats.min && grounded) {
             rb.velocity = new Vector3(0.5f * jumpForce * dir, 1.2f * jumpForce);
             if (jumpForce + 1f > jumpStats.min)
                 GetComponent<AudioSource>().Play();

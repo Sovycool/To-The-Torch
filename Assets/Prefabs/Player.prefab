@@ -10417,6 +10417,37 @@ Transform:
   - {fileID: 6640072374171606334}
   m_Father: {fileID: 282146877707979897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5234750467988169514
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4334162027859914149}
+  m_Layer: 3
+  m_Name: Hitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4334162027859914149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5234750467988169514}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 282146877707979897}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6092977402270334058
 GameObject:
   m_ObjectHideFlags: 0
@@ -10427,7 +10458,7 @@ GameObject:
   m_Component:
   - component: {fileID: 282146877707979897}
   - component: {fileID: 305850673347745808}
-  - component: {fileID: 7579667676275380337}
+  - component: {fileID: 8398585389256066875}
   - component: {fileID: 3220977642342246291}
   - component: {fileID: 9098078634066283931}
   - component: {fileID: 5001047537819951644}
@@ -10455,6 +10486,7 @@ Transform:
   - {fileID: 8897154364286936629}
   - {fileID: 5670268857661036777}
   - {fileID: 5525278276462080294}
+  - {fileID: 4334162027859914149}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &305850673347745808
@@ -10482,16 +10514,16 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 120
-  m_CollisionDetection: 0
---- !u!65 &7579667676275380337
-BoxCollider:
+  m_Constraints: 56
+  m_CollisionDetection: 1
+--- !u!135 &8398585389256066875
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6092977402270334058}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: e1203f215bf4ebd45ad7a8f5da610244, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -10503,7 +10535,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!82 &3220977642342246291
 AudioSource:
