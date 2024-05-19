@@ -25,10 +25,15 @@ public class PlayerMovement : MonoBehaviour
 
     public JumpStats jumpStats = new(0.0f, 10.0f, 50.0f, 1.0f);
     public GameObject arrow;
+    public GameObject end;
     [HideInInspector]
     public float jumpForce;
     [HideInInspector]
     public bool grounded = false;
+    [HideInInspector]
+    public bool finished = false;
+    [SerializeField]
+    private AudioClip endClip;
     private Rigidbody rb;
     private float angle = 45f;
 
@@ -43,8 +48,18 @@ public class PlayerMovement : MonoBehaviour
         grounded = rb.velocity.y == 0;
     }
 
+    private void FadeOutArrow()
+    {
+            arrow.GetComponentInChildren<SpriteRenderer>().color = new Color(255f, 255f, 255f, Mathf.Lerp(arrow.GetComponentInChildren<SpriteRenderer>().color.a, 0f, 0.1f));
+    }
+
     private void MoveAngle()
     {
+        if (finished) {
+            angle = 45f;
+            FadeOutArrow();
+            return;
+        }
         if (Input.GetKey(KeyCode.RightArrow))
             angle = Math.Min(angle + jumpStats.rotationSpeed, 90);
         if (Input.GetKey(KeyCode.LeftArrow))
@@ -74,5 +89,28 @@ public class PlayerMovement : MonoBehaviour
                 GetComponent<AudioSource>().Play();
             jumpForce = jumpStats.min;
         }
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("End") && grounded) {
+            finished = true;
+            GetComponent<PlayerLight>().enabled = false;
+            GetComponent<AudioSource>().clip = endClip;
+            jumpStats.max = 100f;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("End")) {
+            StartCoroutine(DelayAction(5f));
+        }
+    }
+
+    IEnumerator DelayAction(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        end.GetComponent<EndingAnimation>().LightTorch();
     }
 }

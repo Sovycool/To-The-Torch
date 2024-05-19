@@ -10771,6 +10771,8 @@ MonoBehaviour:
   arrow: {fileID: 528789965019118986}
   jumpForce: 0
   grounded: 0
+  finished: 0
+  endClip: {fileID: 8300000, guid: ab458369ae0bcd544ae01a373a0ea1db, type: 3}
 --- !u!114 &5001047537819951644
 MonoBehaviour:
   m_ObjectHideFlags: 0
