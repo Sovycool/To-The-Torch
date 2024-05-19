@@ -9,25 +9,28 @@ public class PlayerMovement : MonoBehaviour
     [System.Serializable]
     public struct JumpStats
     {
-        public JumpStats(float mn, float mx, float ttm)
+        public JumpStats(float mn, float mx, float ttm, float rs)
         {
             min = mn;
             max = mx;
             timeToMax = ttm;
+            rotationSpeed = rs;
         }
 
         public float min;
         public float max;
         public float timeToMax;
+        public float rotationSpeed;
     }
 
-    public JumpStats jumpStats = new(0.0f, 10.0f, 50.0f);
+    public JumpStats jumpStats = new(0.0f, 10.0f, 50.0f, 1.0f);
+    public GameObject arrow;
     [HideInInspector]
     public float jumpForce;
     [HideInInspector]
     public bool grounded = false;
     private Rigidbody rb;
-    private int dir = 0;
+    private float angle = 45f;
 
     void Awake()
     {
@@ -40,47 +43,33 @@ public class PlayerMovement : MonoBehaviour
         grounded = rb.velocity.y == 0;
     }
 
-    private void SetDir()
+    private void MoveAngle()
     {
-        dir = 0;
         if (Input.GetKey(KeyCode.RightArrow))
-            dir = 1;
+            angle = Math.Min(angle + jumpStats.rotationSpeed, 90);
         if (Input.GetKey(KeyCode.LeftArrow))
-            dir = Math.Max(-1, dir - 1);
-    }
-
-    private void BounceOnWalls()
-    {
-        if (Physics.Raycast(transform.position, Vector3.right, 0.51f) ||
-            Physics.Raycast(transform.position, Vector3.left, 0.51f)) {
-            rb.velocity = new Vector3(rb.velocity.x * -1, rb.velocity.y);
-        }
-    }
-
-    private void BounceOnCeiling()
-    {
-        if (Physics.Raycast(transform.position, Vector3.up, 0.51f) && rb.velocity.y > 0) {
-            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y * -0.9f);
-        }
+            angle = Math.Max(angle - jumpStats.rotationSpeed, 0);
+        arrow.transform.rotation = Quaternion.AngleAxis(45f - angle, Vector3.forward);
     }
 
     private void StickOnGround()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, 0.51f) && rb.velocity.y <= 0)
-            rb.velocity = new Vector3(0f, 0f, 0f);
+        if (Physics.Raycast(transform.position + new Vector3(0.49f, 0f), Vector3.down, 0.52f, LayerMask.GetMask("Default")) ||
+            Physics.Raycast(transform.position - new Vector3(0.49f, 0f), Vector3.down, 0.52f, LayerMask.GetMask("Default")) ||
+            Physics.Raycast(transform.position, Vector3.down, 0.52f, LayerMask.GetMask("Default"))) {
+            rb.velocity = new Vector3(0f, 0f);
+            }
     }
 
     void FixedUpdate()
     {
-        BounceOnWalls();
-        BounceOnCeiling();
         StickOnGround();
         IsGrounded();
-        SetDir();
+        MoveAngle();
         if (Input.GetKey(KeyCode.Space) && grounded)
             jumpForce = Math.Min(jumpForce + (jumpStats.max / jumpStats.timeToMax), jumpStats.max);
         else if (jumpForce > jumpStats.min && grounded) {
-            rb.velocity = new Vector3(0.5f * jumpForce * dir, 1.2f * jumpForce);
+            rb.velocity = Quaternion.AngleAxis(45f - angle, Vector3.forward) * new Vector3(0f, jumpForce);
             if (jumpForce + 1f > jumpStats.min)
                 GetComponent<AudioSource>().Play();
             jumpForce = jumpStats.min;

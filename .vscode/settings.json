@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Jump-King-main.sln"
+    "dotnet.defaultSolution": "Jump King.sln"
 }
