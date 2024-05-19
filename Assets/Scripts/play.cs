@@ -7,7 +7,7 @@ public class play : MonoBehaviour
 {
     public void PlayGame()
     {
-        SceneManager.LoadSceneAsync(1);
+        SceneManager.LoadSceneAsync(sceneName: "Game");
     }
 
     public void QuitGame()
